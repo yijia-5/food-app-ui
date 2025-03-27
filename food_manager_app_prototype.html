@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Food Manager App Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    .app-container {
+      max-width: 390px;
+      height: 844px;
+      margin: 0 auto;
+      border: 12px solid #222;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      background-color: white;
+    }
+    .page {
+      position: absolute;
+      width: 100%;
+      height: calc(100% - 80px);
+      overflow-y: auto;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      padding-bottom: 80px;
+    }
+    .page.active {
+      transform: translateX(0);
+      z-index: 10;
+    }
+    .page.inactive {
+      transform: translateX(100%);
+      z-index: 5;
+    }
+    .nav-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+    }
+    /* Define freshness indicator colors */
+    .freshness-good { background-color: #4ade80; }
+    .freshness-medium { background-color: #facc15; }
+    .freshness-bad { background-color: #f87171; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto py-8">
+    <h1 class="text-2xl font-bold text-center mb-8">Home Food Manager App Prototype</h1>
+
+    <!-- App Container -->
+    <div class="app-container shadow-2xl">
+      <!-- Food Management Page (Home) -->
+      <div id="food-page" class="page active bg-white">
+        <!-- Top Status Bar -->
+        <div class="p-4 bg-green-600 text-white">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">My Ingredients</h2>
+            <div class="flex gap-3">
+              <button class="p-1" onclick="showSearchBar()">
+                <i class="fas fa-search"></i>
+              </button>
+              <button class="p-1">
+                <i class="fas fa-filter"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Search Bar (Hidden by Default) -->
+          <div id="search-bar" class="mt-3 hidden">
+            <div class="relative">
+              <input type="text" placeholder="Search ingredients..." class="w-full p-2 pl-10 pr-3 rounded-lg bg-white text-gray-800">
+              <i class="fas fa-search text-gray-500 absolute left-3 top-3"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Food Categories -->
+        <div class="px-4 py-3 flex overflow-x-auto">
+          <button class="px-4 py-1 mr-2 rounded-full bg-green-600 text-white text-sm whitespace-nowrap">All</button>
+          <button class="px-4 py-1 mr-2 rounded-full bg-gray-200 text-gray-700 text-sm whitespace-nowrap">Fruits & Vegetables</button>
+          <button class="px-4 py-1 mr-2 rounded-full bg-gray-200 text-gray-700 text-sm whitespace-nowrap">Meat</button>
+          <button class="px-4 py-1 mr-2 rounded-full bg-gray-200 text-gray-700 text-sm whitespace-nowrap">Seafood</button>
+          <button class="px-4 py-1 mr-2 rounded-full bg-gray-200 text-gray-700 text-sm whitespace-nowrap">Dairy</button>
+          <button class="px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm whitespace-nowrap">Frozen Foods</button>
+        </div>
+
+        <!-- Ingredients List -->
+        <div class="px-4 py-2">
+          <!-- Ingredient Item - Fresh -->
+          <div class="flex items-center p-3 mb-3 bg-white rounded-xl shadow">
+            <div class="w-16 h-16 rounded-lg overflow-hidden mr-3">
+              <img src="https://images.unsplash.com/photo-1587049352851-8d4e89133924" alt="Broccoli" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <h3 class="font-medium">Broccoli</h3>
+                <span class="text-sm text-gray-500">250g</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-xs inline-block w-2 h-2 rounded-full freshness-good mr-1"></span>
+                <span class="text-xs text-gray-600">Expires in 5 days</span>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-xs text-gray-500">Purchased: 11/01/2023</span>
+                <button class="text-gray-400 text-sm p-1">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ingredient Item - Medium Freshness -->
+          <div class="flex items-center p-3 mb-3 bg-white rounded-xl shadow">
+            <div class="w-16 h-16 rounded-lg overflow-hidden mr-3">
+              <img src="https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f" alt="Strawberries" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <h3 class="font-medium">Strawberries</h3>
+                <span class="text-sm text-gray-500">500g</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-xs inline-block w-2 h-2 rounded-full freshness-medium mr-1"></span>
+                <span class="text-xs text-gray-600">Expires in 2 days</span>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-xs text-gray-500">Purchased: 10/30/2023</span>
+                <button class="text-gray-400 text-sm p-1">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ingredient Item - Expiring Soon -->
+          <div class="flex items-center p-3 mb-3 bg-white rounded-xl shadow">
+            <div class="w-16 h-16 rounded-lg overflow-hidden mr-3">
+              <img src="https://images.unsplash.com/photo-1588269965602-0646a16f27cd" alt="Milk" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <h3 class="font-medium">Milk</h3>
+                <span class="text-sm text-gray-500">1L</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-xs inline-block w-2 h-2 rounded-full freshness-bad mr-1"></span>
+                <span class="text-xs text-gray-600">Expires today</span>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-xs text-gray-500">Purchased: 10/25/2023</span>
+                <button class="text-gray-400 text-sm p-1">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ingredient Item - Normal -->
+          <div class="flex items-center p-3 mb-3 bg-white rounded-xl shadow">
+            <div class="w-16 h-16 rounded-lg overflow-hidden mr-3">
+              <img src="https://images.unsplash.com/photo-1546554137-f86b9593a222" alt="Chicken Breast" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <h3 class="font-medium">Chicken Breast</h3>
+                <span class="text-sm text-gray-500">500g</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-xs inline-block w-2 h-2 rounded-full freshness-good mr-1"></span>
+                <span class="text-xs text-gray-600">Expires in 4 days</span>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <span class="text-xs text-gray-500">Purchased: 10/28/2023</span>
+                <button class="text-gray-400 text-sm p-1">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Ingredient Button -->
+        <button class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center">
+          <i class="fas fa-plus text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Shopping List Page -->
+      <div id="shopping-page" class="page inactive bg-white">
+        <!-- Top Status Bar -->
+        <div class="p-4 bg-blue-600 text-white">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Shopping List</h2>
+            <div class="flex gap-3">
+              <button class="p-1">
+                <i class="fas fa-share-alt"></i>
+              </button>
+              <button class="p-1">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shopping List Content -->
+        <div class="px-4 py-4">
+          <!-- Pending Items -->
+          <h3 class="text-lg font-semibold mb-3">To Buy (3)</h3>
+          <div class="mb-5">
+            <!-- Shopping Item 1 -->
+            <div class="flex items-center p-3 mb-3 bg-white border border-gray-200 rounded-xl">
+              <input type="checkbox" class="w-5 h-5 mr-3 accent-blue-600">
+              <div class="flex-1">
+                <div class="flex justify-between">
+                  <h4 class="font-medium">Apples</h4>
+                  <span class="text-sm text-gray-500">5 pcs</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                  Produce section
+                </div>
+              </div>
+              <button class="text-gray-400 ml-2 p-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+
+            <!-- Shopping Item 2 -->
+            <div class="flex items-center p-3 mb-3 bg-white border border-gray-200 rounded-xl">
+              <input type="checkbox" class="w-5 h-5 mr-3 accent-blue-600">
+              <div class="flex-1">
+                <div class="flex justify-between">
+                  <h4 class="font-medium">Beef</h4>
+                  <span class="text-sm text-gray-500">500g</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                  Meat section
+                </div>
+              </div>
+              <button class="text-gray-400 ml-2 p-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+
+            <!-- Shopping Item 3 -->
+            <div class="flex items-center p-3 mb-3 bg-white border border-gray-200 rounded-xl">
+              <input type="checkbox" class="w-5 h-5 mr-3 accent-blue-600">
+              <div class="flex-1">
+                <div class="flex justify-between">
+                  <h4 class="font-medium">Yogurt</h4>
+                  <span class="text-sm text-gray-500">6 bottles</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                  Dairy section
+                </div>
+              </div>
+              <button class="text-gray-400 ml-2 p-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Completed Items -->
+          <h3 class="text-lg font-semibold mb-3">Purchased (2)</h3>
+          <div>
+            <!-- Purchased Item 1 -->
+            <div class="flex items-center p-3 mb-3 bg-gray-100 border border-gray-200 rounded-xl">
+              <input type="checkbox" checked class="w-5 h-5 mr-3 accent-blue-600">
+              <div class="flex-1">
+                <div class="flex justify-between">
+                  <h4 class="font-medium line-through text-gray-500">Bananas</h4>
+                  <span class="text-sm text-gray-500 line-through">2 bunches</span>
+                </div>
+              </div>
+              <button class="text-gray-400 ml-2 p-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+
+            <!-- Purchased Item 2 -->
+            <div class="flex items-center p-3 mb-3 bg-gray-100 border border-gray-200 rounded-xl">
+              <input type="checkbox" checked class="w-5 h-5 mr-3 accent-blue-600">
+              <div class="flex-1">
+                <div class="flex justify-between">
+                  <h4 class="font-medium line-through text-gray-500">Eggs</h4>
+                  <span class="text-sm text-gray-500 line-through">1 carton</span>
+                </div>
+              </div>
+              <button class="text-gray-400 ml-2 p-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Shopping Item Button -->
+        <button class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center">
+          <i class="fas fa-plus text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Notifications Page -->
+      <div id="notification-page" class="page inactive bg-white">
+        <!-- Top Status Bar -->
+        <div class="p-4 bg-orange-500 text-white">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Reminders</h2>
+            <button class="p-1">
+              <i class="fas fa-cog"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Notification Content -->
+        <div class="px-4 py-4">
+          <!-- Today's Reminders -->
+          <h3 class="text-lg font-semibold mb-3">Today's Reminders</h3>
+          <div class="mb-5">
+            <!-- Reminder Item 1 -->
+            <div class="p-3 mb-3 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                <div class="flex-1">
+                  <h4 class="font-medium">Milk expiring soon</h4>
+                  <p class="text-xs text-gray-500 mt-1">Today is the last day to consume, please use soon</p>
+                </div>
+                <button class="text-gray-400 ml-2 p-2">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tomorrow's Reminders -->
+          <h3 class="text-lg font-semibold mb-3">Tomorrow's Reminders</h3>
+          <div class="mb-5">
+            <!-- Reminder Item 2 -->
+            <div class="p-3 mb-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl">
+              <div class="flex items-center">
+                <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                <div class="flex-1">
+                  <h4 class="font-medium">Strawberries expiring soon</h4>
+                  <p class="text-xs text-gray-500 mt-1">Expires in 1 day, please plan to use</p>
+                </div>
+                <button class="text-gray-400 ml-2 p-2">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Future Reminders -->
+          <h3 class="text-lg font-semibold mb-3">Future Reminders</h3>
+          <div>
+            <!-- Reminder Item 3 -->
+            <div class="p-3 mb-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+              <div class="flex items-center">
+                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                <div class="flex-1">
+                  <h4 class="font-medium">Broccoli expiration reminder</h4>
+                  <p class="text-xs text-gray-500 mt-1">Expires in 5 days</p>
+                </div>
+                <button class="text-gray-400 ml-2 p-2">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reminder Item 4 -->
+            <div class="p-3 mb-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+              <div class="flex items-center">
+                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                <div class="flex-1">
+                  <h4 class="font-medium">Chicken breast expiration reminder</h4>
+                  <p class="text-xs text-gray-500 mt-1">Expires in 4 days</p>
+                </div>
+                <button class="text-gray-400 ml-2 p-2">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Reminder Button -->
+        <button class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center">
+          <i class="fas fa-bell text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="settings-page" class="page inactive bg-gray-100">
+        <!-- Top Status Bar -->
+        <div class="p-4 bg-gray-700 text-white">
+          <h2 class="text-xl font-bold">Settings</h2>
+        </div>
+
+        <!-- User Information -->
+        <div class="p-4 bg-white mb-3">
+          <div class="flex items-center">
+            <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb" alt="User Avatar" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-semibold text-lg">Jane Cook</h3>
+              <p class="text-sm text-gray-500">ID: 10086</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Options -->
+        <div class="bg-white mb-3">
+          <h3 class="text-xs text-gray-500 px-4 pt-3 pb-1">Account Settings</h3>
+          <div class="border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+              <span>Profile</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300"></i>
+          </div>
+          <div class="border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-bell text-gray-400 mr-3"></i>
+              <span>Notifications</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300"></i>
+          </div>
+        </div>
+
+        <div class="bg-white mb-3">
+          <h3 class="text-xs text-gray-500 px-4 pt-3 pb-1">App Settings</h3>
+          <div class="border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-globe text-gray-400 mr-3"></i>
+              <span>Language</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-500 mr-2">English</span>
+              <i class="fas fa-chevron-right text-gray-300"></i>
+            </div>
+          </div>
+          <div class="border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-moon text-gray-400 mr-3"></i>
+              <span>Dark Mode</span>
+            </div>
+            <div class="relative inline-block w-12 align-middle select-none">
+              <input type="checkbox" id="toggle" class="absolute opacity-0 w-0 h-0" />
+              <label for="toggle" class="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+            </div>
+          </div>
+          <div class="px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-database text-gray-400 mr-3"></i>
+              <span>Backup & Restore</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300"></i>
+          </div>
+        </div>
+
+        <div class="bg-white mb-3">
+          <h3 class="text-xs text-gray-500 px-4 pt-3 pb-1">About</h3>
+          <div class="border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-info-circle text-gray-400 mr-3"></i>
+              <span>Version</span>
+            </div>
+            <span class="text-gray-500">v1.0.0</span>
+          </div>
+          <div class="px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+              <i class="fas fa-question-circle text-gray-400 mr-3"></i>
+              <span>Help & Feedback</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300"></i>
+          </div>
+        </div>
+
+        <div class="mt-3 p-4">
+          <button class="w-full py-3 bg-red-500 text-white rounded-lg">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <div class="nav-bar bg-white border-t border-gray-200 px-2 py-1">
+        <div class="flex justify-around">
+          <button onclick="changePage('food-page')" class="flex flex-col items-center p-2">
+            <i class="fas fa-carrot text-green-600"></i>
+            <span class="text-xs mt-1 text-green-600">Food</span>
+          </button>
+          <button onclick="changePage('shopping-page')" class="flex flex-col items-center p-2 text-gray-500">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="text-xs mt-1">Shopping</span>
+          </button>
+          <button onclick="changePage('notification-page')" class="flex flex-col items-center p-2 text-gray-500">
+            <i class="fas fa-bell"></i>
+            <span class="text-xs mt-1">Reminders</span>
+          </button>
+          <button onclick="changePage('settings-page')" class="flex flex-col items-center p-2 text-gray-500">
+            <i class="fas fa-cog"></i>
+            <span class="text-xs mt-1">Settings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function changePage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+        page.classList.add('inactive');
+      });
+      
+      // Show selected page
+      document.getElementById(pageId).classList.remove('inactive');
+      document.getElementById(pageId).classList.add('active');
+      
+      // Update bottom nav highlighting
+      document.querySelectorAll('.nav-bar button').forEach(button => {
+        button.classList.remove('text-green-600', 'text-blue-600', 'text-orange-500', 'text-gray-700');
+        button.classList.add('text-gray-500');
+      });
+      
+      const buttonIndex = {
+        'food-page': 0,
+        'shopping-page': 1,
+        'notification-page': 2,
+        'settings-page': 3
+      }[pageId];
+      
+      const colorClass = {
+        0: 'text-green-600',
+        1: 'text-blue-600',
+        2: 'text-orange-500',
+        3: 'text-gray-700'
+      }[buttonIndex];
+      
+      document.querySelectorAll('.nav-bar button')[buttonIndex].classList.remove('text-gray-500');
+      document.querySelectorAll('.nav-bar button')[buttonIndex].classList.add(colorClass);
+      
+      // Update icon colors
+      const iconElements = document.querySelectorAll('.nav-bar button i');
+      iconElements.forEach(icon => {
+        icon.className = icon.className.replace(/text-\w+-\d+/g, '');
+      });
+      
+      if (colorClass) {
+        iconElements[buttonIndex].classList.add(colorClass);
+      }
+    }
+    
+    function showSearchBar() {
+      const searchBar = document.getElementById('search-bar');
+      if (searchBar.classList.contains('hidden')) {
+        searchBar.classList.remove('hidden');
+      } else {
+        searchBar.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
